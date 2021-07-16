@@ -1,6 +1,6 @@
 # Virtuoso as Linked Data Platform
 
-Deploy the OpenLink Virtuoso triplestore with the Linked Data Platform feature enabled using the official Virtuoso docker image `openlink/virtuoso-opensource-7:latest`
+Deploy the OpenLink Virtuoso triplestore with the Linked Data Platform feature enabled, using the official Virtuoso docker image `openlink/virtuoso-opensource-7:latest`
 
 The Linked Data Platform allows you to upload relatively large RDF files over HTTP instead of using the server bulk load which require direct access to the server
 
@@ -12,7 +12,7 @@ You can then browse the uploaded RDF files through Virtuoso webDAV file browser,
 
 ## Deploy with Docker
 
-Check for the `docker-compose.yml` to see if there are any changes you want to make to the deployment configuration.
+Check for the [`docker-compose.yml`](https://github.com/vemonet/virtuoso-ldp/blob/main/docker-compose.yml) to see if there are any changes you want to make to the deployment configuration.
 
 1. Define the password:
 
@@ -26,7 +26,7 @@ echo "VIRTUOSO_PASSWORD=yourpassword" > .env
 docker-compose up -d
 ```
 
-3. Once Virtuoso is accessible run this script to install the VAD packages and create a `/DAV/ldp` folder publicly readable:
+3. Once Virtuoso is accessible run the [`prepare_virtuoso_docker.sh`](https://github.com/vemonet/virtuoso-ldp/blob/main/prepare_virtuoso_docker.sh) script to install the VAD packages and create a `/DAV/ldp` folder publicly readable:
 
 ```bash
 ./prepare_virtuoso_docker.sh
@@ -34,15 +34,15 @@ docker-compose up -d
 
 ## Deploy on OpenShift (DSRI)
 
-You can easily deploy a Virtuoso Linked Data Platform on the [Data Science Research Infrastructure (DSRI)](https://maastrichtu-ids.github.io/dsri-documentation/) at Maastricht University. Search for the **Virtuoso** template in the Catalog, then deploy Virtuoso based on the `openlink/virtuoso-opensource-7:latest` image. You can check the [YAML of the Virtuoso template here](https://github.com/MaastrichtU-IDS/dsri-documentation/blob/master/applications/templates/template-virtuoso.yml).
+1. You can easily deploy a Virtuoso Linked Data Platform on the [Data Science Research Infrastructure (DSRI)](https://maastrichtu-ids.github.io/dsri-documentation/) at Maastricht University. Search for the **Virtuoso** template in the Catalog, then deploy Virtuoso based on the `openlink/virtuoso-opensource-7:latest` image. You can check the [YAML of the Virtuoso template here](https://github.com/MaastrichtU-IDS/dsri-documentation/blob/master/applications/templates/template-virtuoso.yml).
 
-Once Virtuoso has been started on the DSRI, use the `oc` command line tool to login and go to your project.
+2. Use the `oc` command line tool to login and go to your project in your laptop terminal.
 
 ```bash
 oc project my-project
 ```
 
-Then run this script to install the VAD packages for LDP, and create a `/DAV/ldp` folder publicly readable:
+3. Once Virtuoso is available on the DSRI, run the [`prepare_virtuoso_dsri.sh`](https://github.com/vemonet/virtuoso-ldp/blob/main/prepare_virtuoso_dsri.sh) script to install the VAD packages for LDP, and create a `/DAV/ldp` folder publicly readable:
 
 ```bash 
 ./prepare_virtuoso_dsri.sh dsri-app-name mypassword
@@ -106,3 +106,7 @@ Create user (working, but does not create the home folder automatically): http:/
 docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="USER_CREATE ('ldp', '${DBA_PASSWORD}', vector ('SQL_ENABLE', '1', 'DAV_ENABLE', '1','HOME', '/DAV/home/ldp') );"
 ```
 
+See also: more discussions about setting up LDP
+
+* https://hub.docker.com/r/markw/ldp_server
+* https://community.openlinksw.com/t/permissions-on-ldp-containers-and-resources/290/14
