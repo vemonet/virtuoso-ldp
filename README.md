@@ -42,10 +42,10 @@ docker-compose up -d
 oc project my-project
 ```
 
-3. Once Virtuoso is available on the DSRI, run the [`prepare_virtuoso_dsri.sh`](https://github.com/vemonet/virtuoso-ldp/blob/main/prepare_virtuoso_dsri.sh) script to install the VAD packages for LDP, and create a `/DAV/ldp` folder publicly readable:
+3. Once Virtuoso is available on the DSRI, run the [`prepare_virtuoso_dsri.sh`](https://github.com/vemonet/virtuoso-ldp/blob/main/prepare_virtuoso_dsri.sh) script providing the Application name you gave to Virtuoso when deploying on the DSRI, and the password for the `dba` user you defined. It will install the VAD packages for LDP, and create a `/DAV/ldp` folder publicly readable:
 
 ```bash 
-./prepare_virtuoso_dsri.sh dsri-app-name mypassword
+./prepare_virtuoso_dsri.sh your-dsri-app-name your-password
 ```
 
 ## Test the LDP
