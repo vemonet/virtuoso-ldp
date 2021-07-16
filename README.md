@@ -34,7 +34,13 @@ docker-compose up -d
 
 ## Deploy on OpenShift (DSRI)
 
-You can easily deploy a Virtuoso Linked Data Platform on the [Data Science Research Infrastructure (DSRI)](https://maastrichtu-ids.github.io/dsri-documentation/) at Maastricht University. Deploy Virtuoso based on the `openlink/virtuoso-opensource-7:latest` image
+You can easily deploy a Virtuoso Linked Data Platform on the [Data Science Research Infrastructure (DSRI)](https://maastrichtu-ids.github.io/dsri-documentation/) at Maastricht University. Search for the **Virtuoso** template in the Catalog, then deploy Virtuoso based on the `openlink/virtuoso-opensource-7:latest` image. You can check the [YAML of the Virtuoso template here](https://github.com/MaastrichtU-IDS/dsri-documentation/blob/master/applications/templates/template-virtuoso.yml).
+
+Once Virtuoso has been started on the DSRI, use the `oc` command line tool to login and go to your project.
+
+```bash
+oc project my-project
+```
 
 Then run this script to install the VAD packages for LDP, and create a `/DAV/ldp` folder publicly readable:
 
@@ -75,8 +81,6 @@ Dynamic Renaming of Local URI's: http://docs.openlinksw.com/virtuoso/rdfdynamicl
 ```bash
 - VIRT_URIQA_DynamicLocal=1
 ```
-
-
 
 ## Virtuoso iSQL commands
 
