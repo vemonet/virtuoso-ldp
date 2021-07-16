@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+
+  # To enable Virtuoso LDP, see https://github.com/vemonet/shapes-of-you#enable-virtuoso-linked-data-platform
+  virtuoso:
+    container_name: virtuoso-ldp
+    image: openlink/virtuoso-opensource-7:latest
+    # See also: https://hub.docker.com/r/markw/ldp_server
+    # https://community.openlinksw.com/t/permissions-on-ldp-containers-and-resources/290/14
+    restart: unless-stopped
+    # volumes:
+    #   - ./data:/database
+    ports:
+      - 8890:8890
+      - 1111:1111
+    environment:
+      - DBA_PASSWORD=${VIRTUOSO_PASSWORD:-dba}
+      - DAV_PASSWORD=${VIRTUOSO_PASSWORD:-dba}
+      - SPARQL_UPDATE=true
+      - DEFAULT_GRAPH=https://w3id.org/um/
+      ## Uncomment the following lines for large amount of data 
+      - VIRT_URIQA_DefaultHost=your.url.org
+      # http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFPerformanceTuning
+      # http://docs.openlinksw.com/virtuoso/rdfperfgeneral/
+      # https://github.com/tenforce/docker-virtuoso/blob/master/virtuoso.ini
+      - VIRT_Database_ErrorLogLevel=2 # default: 7 is maximum logs
+      - VIRT_HTTPServer_HTTPThreadSize=280000
+      # - VIRT_URIQA_DynamicLocal=1
+      # - VIRT_Parameters_DirsAllowed=., /data, /usr/local/virtuoso-opensource/share/virtuoso/vad, /usr/local/virtuoso-opensource/var/lib/virtuoso/db
+      # Large dataset config
+      - VIRT_SPARQL_ResultSetMaxRows=1048576
+      - VIRT_SPARQL_MaxQueryCostEstimationTime=200000
+      - VIRT_SPARQL_MaxQueryExecutionTime=1000000
+      - VIRT_Database_MaxCheckpointRemap=125000
+      - VIRT_TempDatabase_MaxCheckpointRemap=125000
+      - VIRT_Parameters_TempDBSize=100000000
+      - VIRT_Parameters_NumberOfBuffers=5450000 # For 64G systems
+      - VIRT_Parameters_MaxDirtyBuffers=4000000
+      - VIRT_SPARQL_ShortenLongURIs=1
+      - VIRT_SPARQL_MaxCacheExpiration=1
+      - VIRT_SPARQL_ExternalQuerySource=1
+      - VIRT_SPARQL_ExternalXsltSource=1
+      
+      # Deploy using https://github.com/nginx-proxy
+      - VIRTUAL_PORT=8890
+      - VIRTUAL_HOST=your.url.org
+      - LETSENCRYPT_HOST=your.url.org
