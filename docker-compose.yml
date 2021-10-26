@@ -36,6 +36,7 @@ services:
       # - VIRT_SPARQL_MaxCacheExpiration=1
       # - VIRT_SPARQL_ExternalQuerySource=1
       # - VIRT_SPARQL_ExternalXsltSource=1
+      # - VIRT_Parameters_DirsAllowed=".,/usr/local/virtuoso-opensource/share/virtuoso/vad,/data"
       
       # # Deploy using https://github.com/nginx-proxy
       # - VIRTUAL_PORT=8890

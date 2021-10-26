@@ -124,3 +124,30 @@ See also: more discussions about setting up LDP
 
 * https://hub.docker.com/r/markw/ldp_server
 * https://community.openlinksw.com/t/permissions-on-ldp-containers-and-resources/290/14
+
+### Bulk load RDF
+
+Start Virtuoso using `docker-compose`, or directly docker run:
+
+```bash
+docker run -it --rm --name virtuoso -v $(pwd):/data -p 8890:8890 -e DBA_PASSWORD=dba -e VIRT_Parameters_DirsAllowed=".,/usr/local/virtuoso-opensource/share/virtuoso/vad,/data" openlink/virtuoso-opensource-7:latest
+```
+
+Bulk load RDF to Virtuoso:
+
+```bash
+docker exec -i virtuoso isql -U dba -P dba exec="ld_dir('/data', '*.nq', 'http://test/'); rdf_loader_run();"
+```
+
+### Dump one graph
+
+For no reason Virtuoso requires to copy/paste a whole file of code to enable the procedure to dump RDF data.
+
+Create the `dump_one_graph` procedure following those instructions: http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFDatasetDump#Dump%20One%20Graph
+
+Dump one graph:
+
+```bash
+docker exec -i virtuoso isql -U dba -P dba exec="dump_one_graph ('http://bio2rdf.org/drugbank_resource:bio2rdf.dataset.drugbank.R3', '/data/dump_drugbank', 999999999999999);"
+```
+
