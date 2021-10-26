@@ -73,7 +73,7 @@ Some relevant links to configure Virtuoso for large graphs:
 Change the folders allowed for loading files through iSQL:
 
 ```bash
-- VIRT_Parameters_DirsAllowed=., /data, /opt/virtuoso-opensource/vad, /usr/local/virtuoso-opensource/share/virtuoso/vad, /usr/local/virtuoso-opensource/var/lib/virtuoso/db
+- VIRT_Parameters_DirsAllowed=., /data, /opt/virtuoso-opensource/vad, /opt/virtuoso-opensource/data, /usr/local/virtuoso-opensource/share/virtuoso/vad, /usr/local/virtuoso-opensource/var/lib/virtuoso/db
 ```
 
 Dynamic Renaming of Local URI's: http://docs.openlinksw.com/virtuoso/rdfdynamiclocal/
@@ -82,28 +82,42 @@ Dynamic Renaming of Local URI's: http://docs.openlinksw.com/virtuoso/rdfdynamicl
 - VIRT_URIQA_DynamicLocal=1
 ```
 
+Link to download VAD packages (e.g. ODS Framework and Briefcase for LDP): http://download3.openlinksw.com/index.html?prefix=uda/vad-vos-packages/7.2/
+
 ## Virtuoso iSQL commands
 
 Here are some examples and documentation for useful iSQL commands to configure Virtuoso:
 
-Link to download VAD packages (e.g. ODS Framework and Briefcase for LDP): http://download3.openlinksw.com/index.html?prefix=uda/vad-vos-packages/7.2/
+* Bulk load RDF files:
 
-Change folder permissions: http://docs.openlinksw.com/virtuoso/fn_dav_api_change/
+```bash
+# Put the RDF file in /opt/virtuoso-opensource/data in the container
+docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="ld_dir_all('/opt/virtuoso-opensource/data', '*.ttl', 'https://w3id.org/um/graph');"
+docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="rdf_loader_run();"
+```
+
+* Change folder permissions: http://docs.openlinksw.com/virtuoso/fn_dav_api_change/
 
 ```bash
 docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="DB.DBA.DAV_PROP_SET('/DAV/home/dav/', ':virtpermissions', '110100100R','dav', '$DBA_PASSWORD');"
 ```
 
-Create ldp user via dav (not working): http://docs.openlinksw.com/virtuoso/fn_dav_api_user/
+* Delete graph in LDP: http://docs.openlinksw.com/virtuoso/fn_dav_api_add/
 
 ```bash
-docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="DB.DBA.DAV_ADD_USER ('ldp', '${DBA_PASSWORD}', 'ldp', '110100000', 0, NULL, 'LDP user', 'vincent.emonet@maastrichtuniversity.nl', 'dba', '${DBA_PASSWORD}');"
+docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="DAV_DELETE ('/DAV/ldp/mydata', 0, 'dav', '$DBA_PASSWORD');"
 ```
 
-Create user (working, but does not create the home folder automatically): http://docs.openlinksw.com/virtuoso/fn_user_create/
+* Create user (working, but does not create the home folder automatically): http://docs.openlinksw.com/virtuoso/fn_user_create/
 
 ```bash
 docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="USER_CREATE ('ldp', '${DBA_PASSWORD}', vector ('SQL_ENABLE', '1', 'DAV_ENABLE', '1','HOME', '/DAV/home/ldp') );"
+```
+
+* Create ldp user via dav (not working): http://docs.openlinksw.com/virtuoso/fn_dav_api_user/
+
+```bash
+docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="DB.DBA.DAV_ADD_USER ('ldp', '${DBA_PASSWORD}', 'ldp', '110100000', 0, NULL, 'LDP user', 'vincent.emonet@maastrichtuniversity.nl', 'dba', '${DBA_PASSWORD}');"
 ```
 
 See also: more discussions about setting up LDP

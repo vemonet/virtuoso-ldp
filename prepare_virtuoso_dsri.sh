@@ -21,3 +21,10 @@ oc exec $pod_id -- isql -U dba -P $DBA_PASSWORD exec="vad_install ('ods_briefcas
 
 # Create /DAV/ldp folder publicly readable: http://docs.openlinksw.com/virtuoso/fn_dav_api_add/
 oc exec $pod_id -- isql -U dba -P $DBA_PASSWORD exec="select DB.DBA.DAV_COL_CREATE ('/DAV/ldp/','110100100R', 'dav','dav','dav', '${DBA_PASSWORD}');"
+
+# Grant SPARQL update role to dav
+oc exec $pod_id -- isql -U dba -P $DBA_PASSWORD exec="USER_GRANT_ROLE('dav','SPARQL_UPDATE',1);"
+oc exec $pod_id -- isql -U dba -P $DBA_PASSWORD exec="grant execute on 'DB.DBA.EXEC_AS' to 'SPARQL';"
+
+# Install fct VAD package
+oc exec $pod_id -- isql -U dba -P $DBA_PASSWORD exec="vad_install ('/opt/virtuoso-opensource/vad/fct_dav.vad', 0);"

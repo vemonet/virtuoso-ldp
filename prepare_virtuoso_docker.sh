@@ -18,3 +18,6 @@ docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="vad_install ('od
 
 # Create /DAV/ldp folder publicly readable: http://docs.openlinksw.com/virtuoso/fn_dav_api_add/
 docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="select DB.DBA.DAV_COL_CREATE ('/DAV/ldp/','110100100R', 'dav','dav','dav', '${DBA_PASSWORD}');"
+
+# Install fct VAD package
+docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="vad_install ('/opt/virtuoso-opensource/vad/fct_dav.vad', 0);"
