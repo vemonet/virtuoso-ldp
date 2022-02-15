@@ -6,9 +6,9 @@ services:
     container_name: virtuoso-ldp
     image: openlink/virtuoso-opensource-7:latest
     restart: unless-stopped
-    ## Change the volume
-    volumes:
-      - ./data:/database
+    ## Change the persistent volume here
+    # volumes:
+    #   - ./data:/database
     ports:
       - 8890:8890
       - 1111:1111

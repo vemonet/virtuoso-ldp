@@ -125,7 +125,7 @@ See also: more discussions about setting up LDP
 * https://hub.docker.com/r/markw/ldp_server
 * https://community.openlinksw.com/t/permissions-on-ldp-containers-and-resources/290/14
 
-### Bulk load RDF
+### Load RDF
 
 Start Virtuoso using `docker-compose`, or directly docker run:
 
@@ -138,6 +138,22 @@ Bulk load RDF to Virtuoso:
 ```bash
 docker exec -i virtuoso isql -U dba -P dba exec="ld_dir('/data', '*.nq', 'http://test/'); rdf_loader_run();"
 ```
+
+To insert triples through the SPARQL endpoint, you will need to query a different endpoint for authentication: http://localhost:8890/sparql-auth
+
+Try to insert triples from the SPARQL endpoint:
+
+```bash
+curl -X POST -u dba:dba -d 'INSERT DATA { GRAPH <http://graph> { <http://example/book1> a <http://example/bookaaa> . }}' http://localhost:8890/sparql-auth
+```
+
+Or
+
+```bash
+curl -X GET -u dba:dba http://localhost:8890/sparql-auth?query=INSERT%20DATA%20%7B%20GRAPH%20%3Chttp%3A%2F%2Fgraph%3E%20%7B%20%3Chttp%3A%2F%2Fexample%2Fbook1%3E%20a%20%3Chttp%3A%2F%2Fexample%2Fbookeorrro%3E%20.%20%7D%7D
+```
+
+Or go to http://localhost:8890/sparql-auth?query=INSERT%20DATA%20%7B%20GRAPH%20%3Chttp%3A%2F%2Fgraph%3E%20%7B%20%3Chttp%3A%2F%2Fexample%2Fbook1%3E%20a%20%3Chttp%3A%2F%2Fexample%2Fbookeoo%3E%20.%20%7D%7D
 
 ### Dump one graph
 

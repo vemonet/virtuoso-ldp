@@ -12,6 +12,10 @@ docker-compose exec virtuoso wget -N http://download3.openlinksw.com/uda/vad-vos
 # docker cp ods_framework_dav.vad bio2kg-registry-virtuoso:/opt/virtuoso-opensource/database
 # docker cp ods_briefcase_dav.vad bio2kg-registry-virtuoso:/opt/virtuoso-opensource/database
 
+# Enable dba to run INSERT on /sparql
+# docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="grant execute on DB.DBA.SPARQL_INSERT_DICT_CONTENT to 'SPARQL';"
+# docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="grant execute on DB.DBA.SPARQL_INSERT_DICT_CONTENT to SPARQL_UPDATE;"
+
 # Install VAD packages: http://docs.openlinksw.com/virtuoso/dbadm/
 docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="vad_install ('ods_framework_dav.vad', 0);"
 docker-compose exec virtuoso isql -U dba -P $DBA_PASSWORD exec="vad_install ('ods_briefcase_dav.vad', 0);"
