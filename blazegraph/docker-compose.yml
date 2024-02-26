@@ -1,0 +1,20 @@
+version: "3"
+
+# Deploy blazegraph
+services:
+  blazegraph:
+    image: lyrasis/blazegraph:2.1.5
+    restart: unless-stopped
+    environment:
+      - BLAZEGRAPH_UID=1000
+      - BLAZEGRAPH_GID=1000
+      - JAVA_OPTS="-Xmx50g"
+      - VIRTUAL_HOST=blazegraph.137.120.31.148.nip.io
+      - LETSENCRYPT_HOST=blazegraph.137.120.31.148.nip.io
+      - VIRTUAL_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/data # Data to load
+      - ./db:/var/lib/jetty/bigdata.jnl # The database persistent file
+    # command: -Djetty.port=8080
